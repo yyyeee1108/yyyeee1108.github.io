@@ -330,3 +330,401 @@ article {
 ```
 
 
+## 04 - Handle events with service workers(서비스 워커로 이벤트 처리)
+
+
+[문서 링크](https://developer.chrome.com/docs/extensions/get-started/tutorial/service-worker-events)
+
+service workder 개념을 다루는 튜토리얼 문서
+
+chrome extension에서 ES Module 사용을 위해 manifest.json에 사용하고자 하는 js 파일의 type을 module로 명시한다  
+-> 명시해준 js파일에서 module을 import하여 사용할 수 있게 된다
+
+>**ES Module (ECMAScript Module)**  
+>여러 개의 JS 파일을 나눠 쓰게 함
+>필요한 기능만 불러올 수 있게 해줌
+>
+>코드를 파일 단위로 정리하여 유지보수가 편함, 필요한 것만 가져와 사용하는 방식으로 불필요한 코드를 최소화할 수 있음
+>
+>ex) export, import
+
+
+<details>
+<summary>service worker 디버깅 방법</summary>
+<div markdown="1">
+service worker의 로그, 언제 종료됐는지 확인하는 방법을 정리함
+![](../images/2025-05-25-google-chrome-extension-01/1c161ff7.webp)
+
+에러 발생 시 Errors라고 버튼 나옴  
+누르면 확인 가능
+</div>
+</details>
+
+
+<span style="background-color: #fff5b1">⭐service worker의 state 저장 방법⭐</span>
+
+기본적으로 service worker는 수명이 짧다
+chrome extension의 service worker는 필요하지 않으면 실행이 중단된다
+service worker는 window 객체에 접근 불가하므로 window.localStorage를 이용한 값 저장 불가함
+반복적으로 종료되기 때문에 글로벌 변수 또한 사용이 어려움
+
+따라서 service worker에 state 저장을 위해 chrome.storage.local을 사용한다
+(chrome.storage API 이용 / manifest.json에 "permission" : \["storage"\]를 추가한다)
+
+참고로 chrome.storage.local은 웹 캐시 삭제 시에도 유지함
+
+
+**이벤트 등록하기**
+- event listener(이벤트 리스너)는 서비스 워커가 다시 시작돼도 살아있어야 하기 때문에 **전역 위치(global scope)**에 등록되어야 한다
+- 리스너를 함수 안에 넣으면 크롬이 재등록 못함
+
+
+서비스 워커는 web API, Chrome API 모두 사용 가능(몇 가지 예외가 있다)
+
+
+
+
+
+**set up a recurring event(반복 이벤트 설정)**
+
+setTimeout()이나 setInterval()은 서비스워커가 종료되면 스케쥴러가 취소시킴
+서비스워커 주기에 맞춰 같이 삭제된다
+따라서 구글 확장 프로그램에서는 `chrome.alarms API`를 이용한다
+
+chrome.alarms
+- 정해진 주기마다 이벤트 발생시키기 가능
+- 크롬이 꺼졌다 켜져도 다시 동작 가능하게 설정 가능
+
+**오늘의 팁 popover api 이용해서 띄우기**  
+**(content script <-> service worker 메시지 주고 받기)**
+
+1. chrome api 문서 들어가면
+2. content script 실행
+3. service worker에게 '오늘의 팁 알려줘' 메시지 보냄
+4. service worker가 저장된 팁 보내줌
+5. content script가 팁을 받아 페이지에 버튼 + 팝오버 형태로 보여줌
+
+
+**코드**
+<details>
+<summary>manifest.json</summary>
+<div markdown="1">
+```json
+{
+
+  "manifest_version": 3,
+
+  "name": "Open extension API reference",
+
+  "version": "1.0.0",
+
+  "icons": {
+
+    "16": "images/icon-16.png",
+
+    "128": "images/icon-128.png"
+
+  },
+
+  "background": {
+
+    "service_worker": "service-worker.js",
+
+    "type": "module"
+
+  },
+
+  "permissions": ["storage", "alarms"],
+
+  "host_permissions": ["https://chrome.dev/f/*"],
+
+  "minimum_chrome_version": "102",
+
+  "omnibox": {
+
+    "keyword": "api"
+
+  },
+
+  "content_scripts": [
+
+    {
+
+      "matches": ["https://developer.chrome.com/docs/extensions/reference/*"],
+
+      "js": ["content.js"]
+
+    }
+
+  ]
+
+}
+```
+</div>
+</details>
+
+<details>
+<summary>service-worker.js</summary>
+<div markdown="1">
+```javascript
+import './sw-omnibox.js';
+import './sw-tips.js';
+```
+</div>
+</details>
+
+<details>
+<summary>sw-omnibox.js</summary>
+<div markdown="1">
+```javascript
+console.log('sw-omnibox.js');
+
+  
+
+// save default API suggestions
+
+// runtime.onInstalled() 이벤트 발생시 extension이 처음 설치될 때의 상태(state) 초기화 가능
+
+  
+
+chrome.runtime.onInstall.addListener(({ reason }) => {
+
+  if (reason === 'install') {
+
+    chrome.storage.local.set({
+
+      apiSuggestions: ['tabs', 'storage', 'scripting'],
+
+    });
+
+  }
+
+});
+
+  
+
+const URL_CHROME_EXTENSIONS_DOC =
+
+  'https://developer.chrome.com/docs/extensions/reference/';
+
+const NUMBER_OF_PREVIOUS_SEARCHES = 4;
+
+  
+
+// Display the suggestions after user starts typing
+
+chrome.omnibox.onInputChanged.addListener(async (input, suggest) => {
+
+  // 기본 설명 문구
+
+  await chrome.omnibox.setDefaultSuggestion({
+
+    description: 'Enter a Chrome API or choose from past searches',
+
+  });
+
+  // 저장소에서 이전 검색어 불러오기
+
+  const { apiSuggestions } = await chrome.storage.local.get('apiSuggestions');
+
+  
+
+  // 검색어 하나하나 꺼내어 목록 전환
+
+  const suggestions = apiSuggestions.map((api) => {
+
+    return { content: api, description: 'Open chrome.${api} API' };
+
+  });
+
+  // 추천 목록을 주소창에 표시한다
+
+  suggest(suggestions);
+
+});
+
+  
+
+// Open the reference page of the chosen API
+
+chrome.omnibox.onInputEntered.addListener((input) => {
+
+  // 새로운 탭 열고 선택한 chrome API 문서 페이지로 이동
+
+  chrome.tabs.create({ url: URL_CHROME_EXTENSIONS_DOC + input });
+
+  // Save the latest keyword
+
+  updateHistory(input);
+
+});
+
+  
+
+async function updateHistory(input) {
+
+  const { apiSuggestions } = await chrome.storage.local.get('apiSuggestions');
+
+  apiSuggestions.unshift(input); // 새 검색어 앞에 추가
+
+  apiSuggestions.splice(NUMBER_OF_PREVIOUS_SEARCHES); // 최대 4개까지 저장
+
+  return chrome.storage.local.set({ apiSuggestions });
+
+}
+```
+</div>
+</details>
+
+<details>
+<summary>sw-tips.js</summary>
+<div markdown="1">
+```javascript
+console.log('sw-tips.js');
+
+  
+
+// Fetch tip & save in storage
+
+const updateTip = async () => {
+
+  const response = await fetch('https://chrome.dev/f/extension_tips');
+
+  const tips = await response.json();
+
+  const randomIndex = Math.floor(Math.random() * tips.length);
+
+  return chrome.storage.local.set({ tip: tips[randomIndex] });
+
+};
+
+  
+
+const ALARM_NAME = 'tip';
+
+  
+
+// check if alarm exist to avoid resetting the timer.
+
+// The alarm might be removed when the browser session restart
+
+async function createAlarm() {
+
+  const alarm = await chrome.alarms.get(ALARM_NAME);
+
+  if (typeof alarm === 'undefined') {
+
+    // 크롬 매번 시작할 때 체크해서 없으면 다시 만들기
+
+    chrome.alarm.create(ALARM_NAME, {
+
+      delayInMinutes: 1, // 첫 실행은 1분 뒤뒤
+
+      periodInMinutes: 1440, // 하루마다 실행 (1440m = 24h)
+
+    });
+
+    updateTip(); // 팁 갱신
+
+  }
+
+}
+
+  
+
+createAlarm();
+
+  
+
+// Update tip once a day
+
+// 알람이 울릴 때마다(onAlarm) updateTip() 함수를 실행해 팁을 새로 받아 저장
+
+chrome.alarms.onAlarm.addListener(updateTip);
+
+  
+
+// Send tip to content script via messaging
+
+// content script에서 온 메시지 응답 처리하는 리스너
+
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+
+  if (message.greeting === 'tip') {
+
+    chrome.storage.local.get('tip').then(sendResponse);
+
+    return true; // sendMessage를 비동기로 쓰겠다는 의미로 반드시 필요함
+
+  }
+
+});
+```
+</div>
+</details>
+
+<details>
+<summary>content.js</summary>
+<div markdown="1">
+```javascript
+(async () => {
+
+  // Sends a message to the service worker and receives a tip in response
+
+  // 서비스워커에게 오늘의 팁 달라고 요청 후 tip에 응답 받아옴
+
+  const { tip } = await chrome.runtime.sendMessage({ greeting: 'tip' });
+
+  
+
+  const nav = document.querySelector('.upper-tabs > nav');
+
+  
+
+  // 팁 팝오버 띄우는 버튼
+
+  const tipWidget = createDomElement(`
+
+    <button type="button" popovertarget="tip-popover" popovertargetaction="show" style="padding: 0 12px; height: 36px;">
+
+        <span style="display:block; font: var(--devsite-link-font,500 14px/20px var(--devsite-primary-font-family));">Tip</span>
+
+    </button>
+
+    `);
+
+  
+
+  // Popover API (HTML5에 추가됨. 팝업 띄우는 기능)
+
+  const popover = createDomElement(
+
+    `<div id='tip-popover' popover style="margin: auto;">${tip}</div>`
+
+  );
+
+  
+
+  document.body.append(popover);
+
+  nav.append(tipWidget);
+
+})();
+
+  
+
+// HTML 문자열을 실제 DOM 요소로 바꾸는 함수수
+
+function createDomElement(html) {
+
+  const dom = new DOMParser().parseFromString(html, 'text/html');
+
+  return dom.body.firstElementChild;
+
+}
+```
+</div>
+</details>
+
+
+
