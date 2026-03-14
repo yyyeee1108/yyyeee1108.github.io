@@ -9,10 +9,10 @@
 ';
 
 /* ===== Fonts ===== */
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
 body {
-  font-family: 'IBM Plex Mono', monospace !important;
+  font-family: 'DM Sans', sans-serif !important;
   font-weight: 300;
   letter-spacing: -0.03em;
 }
@@ -25,7 +25,7 @@ h5,
 header .post-desc,
 #toc-bar .label,
 #search-results a {
-  font-family: 'IBM Plex Mono', monospace !important;
+  font-family: 'DM Sans', sans-serif !important;
   font-weight: 400;
   letter-spacing: -0.04em;
 }
@@ -33,7 +33,7 @@ header .post-desc,
 code,
 pre,
 kbd {
-  font-family: 'JetBrains Mono', monospace !important;
+  font-family: 'DM Sans', sans-serif !important;
   letter-spacing: -0.02em;
 }
 
@@ -42,49 +42,60 @@ kbd {
 .tag,
 time,
 .reading-time {
-  font-family: 'IBM Plex Mono', monospace !important;
+  font-family: 'DM Sans', sans-serif !important;
   font-size: 11px !important;
   letter-spacing: -0.02em;
 }
 
-/* ===== Tagline ===== */
 .site-subtitle {
-  font-family: 'IBM Plex Mono', monospace !important;
+  font-family: 'DM Sans', sans-serif !important;
   font-style: normal !important;
   font-weight: 300 !important;
   letter-spacing: -0.03em;
 }
 
-/* ===== Sidebar Nav ===== */
+/* ===== Sidebar ===== */
+#sidebar {
+  background-color: transparent !important;
+  border-right: none !important;
+}
+
+#sidebar,
+#sidebar a,
+#sidebar .site-title,
+#sidebar .site-subtitle,
+#sidebar nav li a {
+  color: #dedede !important;
+}
+
+[data-mode='light'] #sidebar,
+[data-mode='light'] #sidebar a,
+[data-mode='light'] #sidebar .site-title,
+[data-mode='light'] #sidebar .site-subtitle,
+[data-mode='light'] #sidebar nav li a {
+  color: #111 !important;
+}
+
 #sidebar nav li i {
   display: none !important;
 }
-
 #sidebar li a {
   font-weight: 350 !important;
 }
 
-#sidebar li.active a {
-  font-weight: 400 !important;
-  color: #d4f76a !important;
-  background: transparent !important;
-}
-
-#sidebar li a:hover {
-  background: transparent !important;
-  color: #d4f76a !important;
-}
-
+#sidebar li.active a,
+#sidebar li a:hover,
 [data-mode='light'] #sidebar li.active a,
 [data-mode='light'] #sidebar li a:hover {
-  color: #3a7d0a !important;
+  font-weight: 400 !important;
+  color: #fd5050 !important;
+  background: transparent !important;
 }
 
 /* ===== Sidebar Nav Text ===== */
 #sidebar li a span {
   font-size: 0 !important;
 }
-
 #sidebar li a span::before {
   font-size: 0.875rem !important;
 }
@@ -131,9 +142,13 @@ time,
 }
 
 #sidebar .sidebar-bottom a::after {
-  font-family: 'IBM Plex Mono', monospace;
+  font-family: 'DM Sans', sans-serif;
   font-size: 11px;
   letter-spacing: -0.02em;
+}
+
+#sidebar .sidebar-bottom a:hover::after {
+  color: #fd5050 !important;
 }
 
 .sidebar-bottom .icon-border {
@@ -160,6 +175,20 @@ time,
   background: transparent !important;
   background-color: transparent !important;
   box-shadow: none !important;
+}
+
+/* ===== Link Hover Color ===== */
+#page-category a:hover,
+#page-tag a:hover,
+#access-lastmod a:hover,
+.post-tail-wrapper .license-wrapper > a:hover,
+#search-results a:hover,
+footer a:hover,
+#topbar #breadcrumb a:hover,
+.post-meta a:not([class]):hover,
+.content a:not(.img-link):hover {
+  color: #fd5050 !important;
+  border-bottom: 1px solid #fd5050 !important;
 }
 
 /* ===== Hide Elements ===== */
