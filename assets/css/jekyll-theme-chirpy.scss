@@ -1,0 +1,130 @@
+---
+---
+
+/* prettier-ignore */
+@use 'main
+{%- if jekyll.environment == 'production' -%}
+  .bundle
+{%- endif -%}
+';
+
+/* ===== Custom Fonts ===== */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;700&display=swap');
+
+/* ===== Body Font ===== */
+body {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-weight: 300;
+  letter-spacing: -0.03em;
+}
+
+/* ===== Heading Font ===== */
+h1,
+h2,
+h3,
+h4,
+h5,
+header .post-desc,
+#toc-bar .label,
+#search-results a {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+}
+
+/* ===== Code Font ===== */
+code,
+pre,
+kbd {
+  font-family: 'JetBrains Mono', monospace !important;
+  letter-spacing: -0.02em;
+}
+
+/* ===== Meta / Tags / Date ===== */
+.post-meta,
+.post-meta a,
+.tag,
+time,
+.reading-time {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-size: 11px !important;
+  letter-spacing: -0.02em;
+}
+
+/* ===== Tagline ===== */
+.site-subtitle {
+  font-family: 'IBM Plex Mono', monospace !important;
+  font-style: normal !important;
+  font-weight: 300 !important;
+  letter-spacing: -0.03em;
+}
+
+/* ===== Hide Sidebar Nav Icons ===== */
+#sidebar nav li i {
+  display: none !important;
+}
+
+/* ===== Sidebar Nav ===== */
+#sidebar li a {
+  font-weight: 350 !important;
+}
+
+#sidebar li.active a {
+  font-weight: 400 !important;
+  color: #d4f76a !important;
+  background: transparent !important;
+}
+
+#sidebar li a:hover {
+  background: transparent !important;
+  color: #d4f76a !important;
+}
+
+[data-mode='light'] #sidebar li.active a,
+[data-mode='light'] #sidebar li a:hover {
+  color: #3a7d0a !important;
+}
+
+/* ===== Sidebar Nav Text ===== */
+#sidebar li a span {
+  font-size: 0 !important;
+}
+#sidebar li a span::before {
+  font-size: 0.875rem !important;
+}
+
+#sidebar li a[href='/'] span::before {
+  content: '~/home';
+}
+#sidebar li a[href='/categories/'] span::before {
+  content: '~/categories';
+}
+#sidebar li a[href='/tags/'] span::before {
+  content: '~/tags';
+}
+#sidebar li a[href='/archives/'] span::before {
+  content: '~/archives';
+}
+#sidebar li a[href='/about/'] span::before {
+  content: '~/about';
+}
+
+/* ===== Hide Avatar ===== */
+#avatar {
+  display: none !important;
+}
+
+/* ===== Hide Jekyll/Chirpy Footer ===== */
+#footer-wrap {
+  display: none !important;
+}
+
+/* ===== Hide License ===== */
+.license-wrapper {
+  display: none !important;
+}
+
+/* ===== Hide Post List Divider ===== */
+#post-list .card-wrapper {
+  border-bottom: none !important;
+}

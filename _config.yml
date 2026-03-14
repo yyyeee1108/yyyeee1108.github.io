@@ -16,7 +16,7 @@ timezone: Asia/Seoul
 
 title: ye:log # the main title
 
-tagline: 삽질일기 # it will display as the subtitle
+tagline: $ 삽질 # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   Backend, AI, and everything in between. 삽질도 기록이 되면 자산이 된다.
