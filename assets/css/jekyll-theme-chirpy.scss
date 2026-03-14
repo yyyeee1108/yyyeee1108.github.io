@@ -8,17 +8,15 @@
 {%- endif -%}
 ';
 
-/* ===== Custom Fonts ===== */
+/* ===== Fonts ===== */
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,700;1,300;1,400&family=JetBrains+Mono:wght@400;700&display=swap');
 
-/* ===== Body Font ===== */
 body {
   font-family: 'IBM Plex Mono', monospace !important;
   font-weight: 300;
   letter-spacing: -0.03em;
 }
 
-/* ===== Heading Font ===== */
 h1,
 h2,
 h3,
@@ -32,7 +30,6 @@ header .post-desc,
   letter-spacing: -0.04em;
 }
 
-/* ===== Code Font ===== */
 code,
 pre,
 kbd {
@@ -40,7 +37,6 @@ kbd {
   letter-spacing: -0.02em;
 }
 
-/* ===== Meta / Tags / Date ===== */
 .post-meta,
 .post-meta a,
 .tag,
@@ -59,12 +55,11 @@ time,
   letter-spacing: -0.03em;
 }
 
-/* ===== Hide Sidebar Nav Icons ===== */
+/* ===== Sidebar Nav ===== */
 #sidebar nav li i {
   display: none !important;
 }
 
-/* ===== Sidebar Nav ===== */
 #sidebar li a {
   font-weight: 350 !important;
 }
@@ -89,6 +84,7 @@ time,
 #sidebar li a span {
   font-size: 0 !important;
 }
+
 #sidebar li a span::before {
   font-size: 0.875rem !important;
 }
@@ -109,22 +105,73 @@ time,
   content: '~/about';
 }
 
-/* ===== Hide Avatar ===== */
+/* ===== Sidebar Bottom ===== */
+#sidebar .sidebar-bottom a {
+  width: auto !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 4px !important;
+  box-shadow: none !important;
+}
+
+#sidebar .sidebar-bottom a i {
+  display: none !important;
+}
+
+#sidebar .sidebar-bottom a[href*='github']::after {
+  content: 'github';
+}
+#sidebar .sidebar-bottom a[href*='linkedin']::after {
+  content: 'linkedin';
+}
+#sidebar .sidebar-bottom a[href*='mailto']::after {
+  content: 'mail';
+}
+
+#sidebar .sidebar-bottom a::after {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: -0.02em;
+}
+
+.sidebar-bottom .icon-border {
+  display: none !important;
+}
+
+/* ===== Mode Toggle ===== */
+#mode-toggle.btn {
+  width: auto !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  padding: 0 4px !important;
+  box-shadow: none !important;
+  margin-right: 8px !important;
+  margin-top: 1px !important;
+}
+
+#mode-toggle.btn:hover,
+#mode-toggle.btn:focus,
+#mode-toggle.btn:active {
+  background: transparent !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+}
+
+/* ===== Hide Elements ===== */
 #avatar {
   display: none !important;
 }
-
-/* ===== Hide Jekyll/Chirpy Footer ===== */
-#footer-wrap {
+#tail-wrapper > footer {
   display: none !important;
 }
-
-/* ===== Hide License ===== */
 .license-wrapper {
   display: none !important;
 }
-
-/* ===== Hide Post List Divider ===== */
 #post-list .card-wrapper {
   border-bottom: none !important;
 }
