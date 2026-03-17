@@ -73,12 +73,22 @@ html[data-mode='dark'] #sidebar .site-title,
 html[data-mode='dark'] #sidebar .site-subtitle {
   color: #dedede !important;
 }
-
-/* 라이트모드 기본 색상 */
 html:not([data-mode='dark']) #sidebar li a span::before,
 html:not([data-mode='dark']) #sidebar .site-title,
 html:not([data-mode='dark']) #sidebar .site-subtitle {
   color: #111 !important;
+}
+
+/* 라이트모드 기본 색상 */
+html[data-mode='light'] #sidebar li a span::before,
+html[data-mode='light'] #sidebar .site-title,
+html[data-mode='light'] #sidebar .site-subtitle {
+  color: #111 !important;
+}
+html:not([data-mode='light']) #sidebar li a span::before,
+html:not([data-mode='light']) #sidebar .site-title,
+html:not([data-mode='light']) #sidebar .site-subtitle {
+  color: #dedede !important;
 }
 
 /* hover / active */
