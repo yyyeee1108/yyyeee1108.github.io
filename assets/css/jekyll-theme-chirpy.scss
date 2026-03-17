@@ -60,22 +60,6 @@ time,
   border-right: none !important;
 }
 
-#sidebar,
-#sidebar a,
-#sidebar .site-title,
-#sidebar .site-subtitle,
-#sidebar nav li a {
-  color: #dedede !important;
-}
-
-[data-mode='light'] #sidebar,
-[data-mode='light'] #sidebar a,
-[data-mode='light'] #sidebar .site-title,
-[data-mode='light'] #sidebar .site-subtitle,
-[data-mode='light'] #sidebar nav li a {
-  color: #111 !important;
-}
-
 #sidebar nav li i {
   display: none !important;
 }
@@ -83,10 +67,29 @@ time,
   font-weight: 350 !important;
 }
 
-#sidebar li.active a,
-#sidebar li a:hover,
-[data-mode='light'] #sidebar li.active a,
-[data-mode='light'] #sidebar li a:hover {
+/* 다크모드 기본 색상 */
+html[data-mode='dark'] #sidebar li a span::before,
+html[data-mode='dark'] #sidebar .site-title,
+html[data-mode='dark'] #sidebar .site-subtitle {
+  color: #dedede !important;
+}
+
+/* 라이트모드 기본 색상 */
+html:not([data-mode='dark']) #sidebar li a span::before,
+html:not([data-mode='dark']) #sidebar .site-title,
+html:not([data-mode='dark']) #sidebar .site-subtitle {
+  color: #111 !important;
+}
+
+/* hover / active */
+html[data-mode='dark'] #sidebar li.active a,
+html[data-mode='dark'] #sidebar li.active a span::before,
+html[data-mode='dark'] #sidebar li a:hover,
+html[data-mode='dark'] #sidebar li a:hover span::before,
+html:not([data-mode='dark']) #sidebar li.active a,
+html:not([data-mode='dark']) #sidebar li.active a span::before,
+html:not([data-mode='dark']) #sidebar li a:hover,
+html:not([data-mode='dark']) #sidebar li a:hover span::before {
   font-weight: 400 !important;
   color: #fd5050 !important;
   background: transparent !important;
