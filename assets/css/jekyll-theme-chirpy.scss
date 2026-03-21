@@ -67,42 +67,72 @@ time,
   font-weight: 350 !important;
 }
 
-/* 다크모드 기본 색상 */
+/* 명시적 다크모드 */
 html[data-mode='dark'] #sidebar li a span::before,
 html[data-mode='dark'] #sidebar .site-title,
 html[data-mode='dark'] #sidebar .site-subtitle {
   color: #dedede !important;
 }
-html:not([data-mode='dark']) #sidebar li a span::before,
-html:not([data-mode='dark']) #sidebar .site-title,
-html:not([data-mode='dark']) #sidebar .site-subtitle {
-  color: #111 !important;
-}
 
-/* 라이트모드 기본 색상 */
+/* 명시적 라이트모드 */
 html[data-mode='light'] #sidebar li a span::before,
 html[data-mode='light'] #sidebar .site-title,
 html[data-mode='light'] #sidebar .site-subtitle {
   color: #111 !important;
 }
-html:not([data-mode='light']) #sidebar li a span::before,
-html:not([data-mode='light']) #sidebar .site-title,
-html:not([data-mode='light']) #sidebar .site-subtitle {
-  color: #dedede !important;
+
+/* 시스템 테마 따를 때 (data-mode 없을 때) */
+@media (prefers-color-scheme: light) {
+  html:not([data-mode]) #sidebar li a span::before,
+  html:not([data-mode]) #sidebar .site-title,
+  html:not([data-mode]) #sidebar .site-subtitle {
+    color: #111 !important;
+  }
 }
 
-/* hover / active */
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode]) #sidebar li a span::before,
+  html:not([data-mode]) #sidebar .site-title,
+  html:not([data-mode]) #sidebar .site-subtitle {
+    color: #dedede !important;
+  }
+}
+
+/* hover / active — 명시적 모드 */
 html[data-mode='dark'] #sidebar li.active a,
 html[data-mode='dark'] #sidebar li.active a span::before,
 html[data-mode='dark'] #sidebar li a:hover,
 html[data-mode='dark'] #sidebar li a:hover span::before,
-html:not([data-mode='dark']) #sidebar li.active a,
-html:not([data-mode='dark']) #sidebar li.active a span::before,
-html:not([data-mode='dark']) #sidebar li a:hover,
-html:not([data-mode='dark']) #sidebar li a:hover span::before {
+html[data-mode='light'] #sidebar li.active a,
+html[data-mode='light'] #sidebar li.active a span::before,
+html[data-mode='light'] #sidebar li a:hover,
+html[data-mode='light'] #sidebar li a:hover span::before {
   font-weight: 400 !important;
   color: #fd5050 !important;
   background: transparent !important;
+}
+
+/* hover / active — 시스템 테마 따를 때 */
+@media (prefers-color-scheme: light) {
+  html:not([data-mode]) #sidebar li.active a,
+  html:not([data-mode]) #sidebar li.active a span::before,
+  html:not([data-mode]) #sidebar li a:hover,
+  html:not([data-mode]) #sidebar li a:hover span::before {
+    font-weight: 400 !important;
+    color: #fd5050 !important;
+    background: transparent !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-mode]) #sidebar li.active a,
+  html:not([data-mode]) #sidebar li.active a span::before,
+  html:not([data-mode]) #sidebar li a:hover,
+  html:not([data-mode]) #sidebar li a:hover span::before {
+    font-weight: 400 !important;
+    color: #fd5050 !important;
+    background: transparent !important;
+  }
 }
 
 /* ===== Sidebar Nav Text ===== */
